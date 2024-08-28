@@ -1,10 +1,10 @@
 import { expect, test } from 'vitest';
-import Scoreboard from '../scoreboard';
+import Scoreboard from './scoreboard';
 import Game from './game';
 
 test('Create a scoreboard', () => {
 	const scoreboard = new Scoreboard();
-	expect(scoreboard.getGames()).toBe([]);
+	expect(scoreboard.getGames()).toEqual([]);
 });
 
 test('Add game to scoreboard', () => {
@@ -14,7 +14,7 @@ test('Add game to scoreboard', () => {
 	scoreboard.addGame(game);
 
 	expect(scoreboard.getGames().length).toBe(1);
-	expect(scoreboard.getGames()[0]).toBe(game);
+	expect(scoreboard.getGames()[0]).toStrictEqual(game);
 });
 
 test('Add several games to scoreboard', () => {
@@ -26,23 +26,32 @@ test('Add several games to scoreboard', () => {
 	scoreboard.addGame(game2);
 
 	expect(scoreboard.getGames().length).toBe(2);
+	expect(scoreboard.getGames()[1]).toStrictEqual(game2);
 });
 
 test('Finish game and remove game from scoreboard', () => {
 	const scoreboard = new Scoreboard();
 
-	const testStartTime = Date.now();
-	const game1 = new Game('RBK', 'MFK');
-	const game2 = new Game('BOD', 'VIK', testStartTime);
+	// Making sure we get a unique timestamp
+	const testStartTime = Date.now() - 1000;
+	// game1 will have our known identifier
+	const game1 = new Game('RBK', 'MFK', testStartTime);
+	const game2 = new Game('BOD', 'VIK');
 
 	scoreboard.addGame(game1);
 	scoreboard.addGame(game2);
 
-	expect(scoreboard.getGames().find((game) => game.startTime == testStartTime)).toBe(game2);
+	// Expect to find a game with our fake timestamp identifier
+	expect(
+		scoreboard.getGames().find((game) => game.getTimeStarted() == testStartTime)
+	).toStrictEqual(game1);
 
-	scoreboard.removeGame(game2);
+	scoreboard.removeGame(game1);
 
-	expect(scoreboard.getGames().find((game) => game.startTime == testStartTime)).toBe(undefined);
+	// Expect we can no longer find a game with the fake timestamp
+	expect(scoreboard.getGames().find((game) => game.getTimeStarted() == testStartTime)).toBe(
+		undefined
+	);
 });
 
 test('Get summary', () => {
