@@ -1,15 +1,18 @@
 <script lang="ts">
+	import { createEventDispatcher } from 'svelte';
 	import Game from '../classes/game';
 	export let game: Game;
+
+	const dispatch = createEventDispatcher();
 
 	let homeScore = game.getHomeTeam().getScore();
 	let awayScore = game.getAwayTeam().getScore();
 
-	function homeScoreChanged() {
-		console.log(homeScore);
-	}
-	function onAwayScoreChanged() {
-		console.log(awayScore);
+	function onScoreChanged() {
+		dispatch('scoreChanged', {
+			homeScore,
+			awayScore
+		});
 	}
 </script>
 
@@ -23,7 +26,7 @@
 			type="text"
 			class="border w-10 h-10 text-center"
 			bind:value={homeScore}
-			on:input={homeScoreChanged}
+			on:input={onScoreChanged}
 		/>
 	</div>
 	<div class="flex flex-1 p-1 items-center gap-2">
@@ -32,7 +35,7 @@
 				type="text"
 				class=" border w-10 h-10 text-center"
 				bind:value={awayScore}
-				on:input={onAwayScoreChanged}
+				on:input={onScoreChanged}
 			/>
 		</div>
 		<div class="">
