@@ -8,10 +8,13 @@
 	let homeScore = game.getHomeTeam().getScore();
 	let awayScore = game.getAwayTeam().getScore();
 
+	// Called when the input is changed
 	function onScoreChanged() {
+		// I'm assuming we already have a check for a valid number here
 		dispatch('scoreChanged', {
-			homeScore,
-			awayScore
+			homeScore: +homeScore,
+			awayScore: +awayScore,
+			gameID: game.getTimeStarted()
 		});
 	}
 </script>
