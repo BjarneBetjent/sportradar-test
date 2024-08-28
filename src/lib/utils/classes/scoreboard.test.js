@@ -64,7 +64,7 @@ test('Finish game and remove game from scoreboard', () => {
 		scoreboard.getGames().find((game) => game.getTimeStarted() == testStartTime)
 	).toStrictEqual(game1);
 
-	scoreboard.removeGame(game1);
+	scoreboard.removeGame(game1.getTimeStarted());
 
 	// Expect we can no longer find a game with the fake timestamp
 	expect(scoreboard.getGames().find((game) => game.getTimeStarted() == testStartTime)).toBe(
@@ -72,10 +72,22 @@ test('Finish game and remove game from scoreboard', () => {
 	);
 });
 
-test('Get summary', () => {
-	// Check if games are correctly ordered
+test('Update game score', () => {
+	const scoreboard = new Scoreboard();
+	const game = new Game('RBK', 'MFK');
+	scoreboard.addGame(game);
+	scoreboard.updateGameScore(game.getTimeStarted(), 1, 0);
+	const scoreboardGame = scoreboard.getGame(game.getTimeStarted());
+	expect(scoreboardGame?.getTotalScore()).toBe(1);
+	expect(scoreboardGame?.getHomeTeam().getScore()).toBe(1);
+	expect(scoreboardGame?.getAwayTeam().getScore()).toBe(0);
 });
 
-test('Adding a new game with a team already included on the scoreboard', () => {
-	// Don't allow if team is already included on scoreboard
+test('Update game score with invalid numbers', () => {
+	const scoreboard = new Scoreboard();
+	const game = new Game('RBK', 'MFK');
+	scoreboard.addGame(game);
+	expect(() => scoreboard.updateGameScore(game.getTimeStarted(), -1, 0)).toThrowError(
+		'Invalid score'
+	);
 });
