@@ -16,6 +16,9 @@ export default class Scoreboard {
 		return this.runningGames.find((game) => game.getTimeStarted() == gameID);
 	}
 
+	/**
+	 * @returns The array of active games
+	 */
 	getGames() {
 		return this.runningGames;
 	}
@@ -23,15 +26,22 @@ export default class Scoreboard {
 	/**
 	 * Add a new game to the scoreboard.
 	 * @param gameToAdd Game to add to the scoreboard
-	 * @returns The added game. If one of the teams are already represented on the scoreboard, returns undefined
+	 * @returns The added game. If one of the teams are already represented on the scoreboard,
+	 * or both team names are the same, returns undefined
 	 */
 	addGame(gameToAdd: Game): Game | undefined {
+		// Check if the team is already playing
 		if (
 			this.teamExistsOnScoreboard(gameToAdd.getAwayTeam().getTeamName()) ||
 			this.teamExistsOnScoreboard(gameToAdd.getHomeTeam().getTeamName())
 		) {
 			return undefined;
 		}
+		// Check if both teams in the game got the same name
+		if (gameToAdd.getHomeTeam().getTeamName() == gameToAdd.getAwayTeam().getTeamName()) {
+			return undefined;
+		}
+		// Check if both team names are the same
 		this.runningGames.push(gameToAdd);
 		return gameToAdd;
 	}
@@ -63,6 +73,11 @@ export default class Scoreboard {
 		gameToUpdate.updateGameScore(homeScore, awayScore);
 	}
 
+	/**
+	 * Sorts active games based total score, if total score is the same,
+	 * sorts by time the game started
+	 * @returns The sorted array of games
+	 */
 	getSummary(): Game[] {
 		return this.runningGames.sort((a, b) => {
 			if (a.getTotalScore() == b.getTotalScore()) {

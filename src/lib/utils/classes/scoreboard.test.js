@@ -47,6 +47,14 @@ test('Add several games to scoreboard, add the same team twice', () => {
 	expect(scoreboard.getGames()[0]).toStrictEqual(game1);
 });
 
+test('Add game to scoreboard with the same team name', () => {
+	const scoreboard = new Scoreboard();
+
+	const game = new Game('RBK', 'RBK');
+	const gameAdded = scoreboard.addGame(game);
+	expect(gameAdded).toBe(undefined);
+});
+
 test('Finish game and remove game from scoreboard', () => {
 	const scoreboard = new Scoreboard();
 
