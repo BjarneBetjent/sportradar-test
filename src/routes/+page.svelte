@@ -44,8 +44,8 @@
 	}
 
 	function updateScore({ detail }) {
-		//
-		console.log('Detaisl', detail);
+		scoreboard.updateGameScore(detail.gameID, detail.homeScore, detail.awayScore);
+		updateSummary();
 	}
 
 	// Update the summary
