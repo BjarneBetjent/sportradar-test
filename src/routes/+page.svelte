@@ -27,6 +27,7 @@
 			const game = new Game(homeTeam, awayTeam);
 			scoreboard.addGame(game);
 			activeGamesStore.set(scoreboard.getGames());
+			inputError = '';
 		} catch (e) {
 			if (e instanceof Error) inputError = String(e.message);
 			else inputError = 'Something went wrong';
@@ -44,6 +45,7 @@
 
 			scoreboard.updateGameScore(detail.gameID, detail.homeScore, detail.awayScore);
 			updateSummary();
+			inputError = '';
 		} catch (e) {
 			if (e instanceof Error) inputError = String(e.message);
 			else inputError = 'Something went wrong';
