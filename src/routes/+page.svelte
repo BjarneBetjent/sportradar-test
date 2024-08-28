@@ -11,7 +11,7 @@
 	let homeTeam: string = '';
 	let awayTeam: string = '';
 	// Error if adding a team failed
-	let addGameError: string = '';
+	let inputError: string = '';
 
 	// Update summary when activeGamesStore changes
 	$: if ($activeGamesStore) {
@@ -28,15 +28,26 @@
 			scoreboard.addGame(game);
 			activeGamesStore.set(scoreboard.getGames());
 		} catch (e) {
-			if (e instanceof Error) addGameError = String(e.message);
-			else addGameError = 'Something went wrong';
+			if (e instanceof Error) inputError = String(e.message);
+			else inputError = 'Something went wrong';
 			return;
 		}
 	}
 
 	function handleScoreUpdated({ detail }) {
-		scoreboard.updateGameScore(detail.gameID, detail.homeScore, detail.awayScore);
-		updateSummary();
+		try {
+			// Simple check to see if we got a number
+			if (isNaN(detail.homeScore) || isNaN(detail.awayScore)) {
+				inputError = 'Invalid score';
+				return;
+			}
+
+			scoreboard.updateGameScore(detail.gameID, detail.homeScore, detail.awayScore);
+			updateSummary();
+		} catch (e) {
+			if (e instanceof Error) inputError = String(e.message);
+			else inputError = 'Something went wrong';
+		}
 	}
 
 	function handleGameFinished({ detail }) {
@@ -65,9 +76,9 @@
 				</div>
 			</div>
 			<button class="border bg-slate-200" on:click={addGame}>Add to scoreboard</button>
-			{#if addGameError}
+			{#if inputError}
 				<div class="">
-					<p class="text-red-600">{addGameError}</p>
+					<p class="text-red-600">{inputError}</p>
 				</div>
 			{/if}
 		</div>
