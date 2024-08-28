@@ -20,16 +20,6 @@
 
 	const scoreboard = new Scoreboard();
 
-	// TEMP MOCK
-	const time = Date.now();
-
-	const game1 = new Game('Rosenborg', 'Molde', time - 1000);
-	const game2 = new Game('Brann', 'Lyn', time);
-	scoreboard.addGame(game1);
-	scoreboard.addGame(game2);
-
-	activeGamesStore.set(scoreboard.getGames());
-
 	// Add a new game to the scoreboard.
 	// Called by the "Add to scoreboard button"
 	function addGame() {
@@ -81,23 +71,25 @@
 			{/if}
 		</div>
 		<!-- Scoreboard -->
-		<div class="flex flex-col w-full px-20 items-center gap-2">
-			<h2 class="font-bold">Scoreboard</h2>
-			{#each $activeGamesStore as game (game.getTimeStarted())}
-				<ActiveGame
-					{game}
-					on:scoreChanged={handleScoreUpdated}
-					on:gameFinished={handleGameFinished}
-				/>
-			{/each}
-		</div>
+		{#if $activeGamesStore.length}
+			<div class="flex flex-col w-full px-20 items-center gap-2">
+				<h2 class="font-bold">Scoreboard</h2>
+				{#each $activeGamesStore as game (game.getTimeStarted())}
+					<ActiveGame
+						{game}
+						on:scoreChanged={handleScoreUpdated}
+						on:gameFinished={handleGameFinished}
+					/>
+				{/each}
+			</div>
 
-		<!-- Summary -->
-		<div class="flex flex-col w-full px-20 items-center gap-2">
-			<h2 class="font-bold">Summary</h2>
-			{#each $summaryStore as game (game.getTimeStarted())}
-				<SummaryGame {game} />
-			{/each}
-		</div>
+			<!-- Summary -->
+			<div class="flex flex-col w-full px-20 items-center gap-2">
+				<h2 class="font-bold">Summary</h2>
+				{#each $summaryStore as game (game.getTimeStarted())}
+					<SummaryGame {game} />
+				{/each}
+			</div>
+		{/if}
 	</div>
 </div>
