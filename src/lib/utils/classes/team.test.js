@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest';
+import Team from './team';
 
 test('Get a teams score', () => {
 	const team = new Team('RBK');
@@ -10,7 +11,6 @@ test('Get a teams name', () => {
 	expect(team.getTeamName()).toBe('RBK');
 });
 
-// test for invalid names
 test('Create a team with invalid name', () => {
 	expect(() => new Team('B')).toThrowError('Invalid team name');
 	expect(() => new Team(123)).toThrowError('Invalid team name');
