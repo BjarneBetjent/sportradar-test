@@ -21,12 +21,30 @@ test('Add several games to scoreboard', () => {
 	const scoreboard = new Scoreboard();
 
 	const game1 = new Game('RBK', 'MFK');
-	scoreboard.addGame(game1);
+	const gameAdded1 = scoreboard.addGame(game1);
+	expect(gameAdded1).toStrictEqual(game1);
+
 	const game2 = new Game('BOD', 'VIK');
-	scoreboard.addGame(game2);
+	const gameAdded2 = scoreboard.addGame(game2);
+	expect(gameAdded2).toStrictEqual(game2);
 
 	expect(scoreboard.getGames().length).toBe(2);
 	expect(scoreboard.getGames()[1]).toStrictEqual(game2);
+});
+
+test('Add several games to scoreboard, add the same team twice', () => {
+	const scoreboard = new Scoreboard();
+
+	const game1 = new Game('RBK', 'MFK');
+	const gameAdded1 = scoreboard.addGame(game1);
+	expect(gameAdded1).toStrictEqual(game1);
+
+	const game2 = new Game('BOD', 'RBK');
+	const gameAdded2 = scoreboard.addGame(game2);
+	expect(gameAdded2).toBe(undefined);
+
+	expect(scoreboard.getGames().length).toBe(1);
+	expect(scoreboard.getGames()[0]).toStrictEqual(game1);
 });
 
 test('Finish game and remove game from scoreboard', () => {
