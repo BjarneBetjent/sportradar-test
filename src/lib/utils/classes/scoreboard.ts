@@ -1,4 +1,5 @@
 import Game from './game';
+
 export default class Scoreboard {
 	private runningGames: Game[];
 
