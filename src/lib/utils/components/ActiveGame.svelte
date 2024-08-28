@@ -8,7 +8,7 @@
 	let homeScore = game.getHomeTeam().getScore();
 	let awayScore = game.getAwayTeam().getScore();
 
-	// Called when the input is changed
+	// Called when the score input is changed
 	function onScoreChanged() {
 		// I'm assuming we already have a check for a valid number here
 		dispatch('scoreChanged', {
