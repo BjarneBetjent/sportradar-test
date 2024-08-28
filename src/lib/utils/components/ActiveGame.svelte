@@ -1,6 +1,43 @@
 <script lang="ts">
 	import Game from '../classes/game';
 	export let game: Game;
+
+	let homeScore = game.getHomeTeam().getScore();
+	let awayScore = game.getAwayTeam().getScore();
+
+	function homeScoreChanged() {
+		console.log(homeScore);
+	}
+	function onAwayScoreChanged() {
+		console.log(awayScore);
+	}
 </script>
 
-<div class="">{game.getHomeTeam()}</div>
+<div class="flex w-96 justify-between odd:bg-slate-50">
+	<div class="flex flex-1 p-1 items-center gap-2">
+		<div class="flex-1">
+			<p class="text-slate-600">Home</p>
+			<p class="text-left">{game.getHomeTeam().getTeamName()}</p>
+		</div>
+		<input
+			type="text"
+			class="border w-10 h-10 text-center"
+			bind:value={homeScore}
+			on:input={homeScoreChanged}
+		/>
+	</div>
+	<div class="flex flex-1 p-1 items-center gap-2">
+		<div class="flex-1">
+			<input
+				type="text"
+				class=" border w-10 h-10 text-center"
+				bind:value={awayScore}
+				on:input={onAwayScoreChanged}
+			/>
+		</div>
+		<div class="">
+			<p class="text-slate-600 text-right">Away</p>
+			<p class="text-right">{game.getAwayTeam().getTeamName()}</p>
+		</div>
+	</div>
+</div>
