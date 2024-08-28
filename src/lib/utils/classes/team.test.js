@@ -11,6 +11,10 @@ test('Get a teams name', () => {
 });
 
 // test for invalid names
+test('Create a team with invalid name', () => {
+	expect(() => new Team('B')).toThrowError('Invalid team name');
+	expect(() => new Team(123)).toThrowError('Invalid team name');
+});
 
 test('Update a teams score with a valid value', () => {
 	const team = new Team('RBK');
