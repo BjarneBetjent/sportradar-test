@@ -6,6 +6,15 @@ export default class Scoreboard {
 		this.runningGames = [];
 	}
 
+	/**
+	 * Get a specific game from the scoreboard
+	 * @param gameID ID of the gave to retrieve
+	 * @returns The requested game, undefined if it doesn't exist in the scoreboard
+	 */
+	getGame(gameID: number): Game | undefined {
+		return this.runningGames.find((game) => game.getTimeStarted() == gameID);
+	}
+
 	getGames() {
 		return this.runningGames;
 	}
@@ -17,8 +26,8 @@ export default class Scoreboard {
 	 */
 	addGame(gameToAdd: Game): Game | undefined {
 		if (
-			this.teamExistsOnScoreboard(gameToAdd.awayTeam.getTeamName()) ||
-			this.teamExistsOnScoreboard(gameToAdd.homeTeam.getTeamName())
+			this.teamExistsOnScoreboard(gameToAdd.getAwayTeam().getTeamName()) ||
+			this.teamExistsOnScoreboard(gameToAdd.getHomeTeam().getTeamName())
 		) {
 			return undefined;
 		}
@@ -31,13 +40,30 @@ export default class Scoreboard {
 	 * @param gameToRemove Game to remove from the scoreboard
 	 * @returns The removed game. If game didn't exist in the scoreboard, returns undefined.
 	 */
-	removeGame(gameToRemove: Game): Game | undefined {
+	removeGame(gameToRemoveID: number): Game | undefined {
+		// Save current length to see if anything was removed
 		const currentLength = this.runningGames.length;
-		this.runningGames = this.runningGames.filter(
-			(game) => game.getTimeStarted() != gameToRemove.getTimeStarted()
-		);
+
+		this.runningGames = this.runningGames.filter((game) => game.getTimeStarted() != gameToRemoveID);
+
 		if (currentLength == this.runningGames.length) return undefined;
-		return gameToRemove;
+		return this.getGame(gameToRemoveID);
+	}
+
+	/**
+	 * Update the score for a given game
+	 * @param gameID ID of the game to update the score for
+	 * @param homeScore New home score
+	 * @param awayScore New away score
+	 */
+	updateGameScore(gameID: number, homeScore: number, awayScore: number) {
+		const gameToUpdate = this.getGame(gameID);
+		if (!gameToUpdate) throw new Error(`No game with ID: ${gameID} found in scoreboard`);
+		gameToUpdate.updateGameScore(homeScore, awayScore);
+	}
+
+	getSummary(): Game[] {
+		return this.runningGames;
 	}
 
 	/**
@@ -47,8 +73,8 @@ export default class Scoreboard {
 	 */
 	private teamExistsOnScoreboard(teamName: string): boolean {
 		const foundGame = this.runningGames.find((game) => {
-			if (game.awayTeam.getTeamName() == teamName) return true;
-			if (game.homeTeam.getTeamName() == teamName) return true;
+			if (game.getAwayTeam().getTeamName() == teamName) return true;
+			if (game.getHomeTeam().getTeamName() == teamName) return true;
 			return false;
 		});
 		if (foundGame) return true;
