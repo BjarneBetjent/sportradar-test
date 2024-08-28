@@ -1,5 +1,3 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
 <script lang="ts">
 	import Scoreboard from '$lib/utils/classes/scoreboard';
 	import Game from '$lib/utils/classes/game';
@@ -8,8 +6,29 @@
 	let homeTeam: string = '';
 	let awayTeam: string = '';
 	let addError: boolean = false;
+
+	$: if ($activeGamesStore) {
+		updateSummary();
+	}
+
 	const scoreboard = new Scoreboard();
+
+	function addGame() {
+		const game = new Game(homeTeam, awayTeam);
+		const added = scoreboard.addGame(game);
+		if (!added) {
+			addError = true;
+			return;
+		}
+		addError = false;
+		activeGamesStore.set(scoreboard.getGames());
+	}
+
+	function updateSummary() {
+		summaryStore.set(scoreboard.getSummary());
+	}
 </script>
+
 <div class="w-screen h-screen bg-red-50 flex justify-center">
 	<div class="bg-blue-50 w-7/12 flex flex-col items-center pt-20 gap-10">
 		<!-- Add team -->
