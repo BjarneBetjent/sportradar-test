@@ -26,20 +26,19 @@ export default class Scoreboard {
 	/**
 	 * Add a new game to the scoreboard.
 	 * @param gameToAdd Game to add to the scoreboard
-	 * @returns The added game. If one of the teams are already represented on the scoreboard,
-	 * or both team names are the same, returns undefined
+	 * @returns The added game
 	 */
-	addGame(gameToAdd: Game): Game | undefined {
+	addGame(gameToAdd: Game): Game {
 		// Check if the team is already playing
 		if (
 			this.teamExistsOnScoreboard(gameToAdd.getAwayTeam().getTeamName()) ||
 			this.teamExistsOnScoreboard(gameToAdd.getHomeTeam().getTeamName())
 		) {
-			return undefined;
+			throw new Error("Can't have the same active in several games");
 		}
 		// Check if both teams in the game got the same name
 		if (gameToAdd.getHomeTeam().getTeamName() == gameToAdd.getAwayTeam().getTeamName()) {
-			return undefined;
+			throw new Error("Team names can't be identical");
 		}
 		// Check if both team names are the same
 		this.runningGames.push(gameToAdd);

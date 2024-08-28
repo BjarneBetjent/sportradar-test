@@ -40,8 +40,9 @@ test('Add several games to scoreboard, add the same team twice', () => {
 	expect(gameAdded1).toStrictEqual(game1);
 
 	const game2 = new Game('BOD', 'RBK');
-	const gameAdded2 = scoreboard.addGame(game2);
-	expect(gameAdded2).toBe(undefined);
+	expect(() => scoreboard.addGame(game2)).toThrowError(
+		"Can't have the same active in several games"
+	);
 
 	expect(scoreboard.getGames().length).toBe(1);
 	expect(scoreboard.getGames()[0]).toStrictEqual(game1);
@@ -51,8 +52,7 @@ test('Add game to scoreboard with the same team name', () => {
 	const scoreboard = new Scoreboard();
 
 	const game = new Game('RBK', 'RBK');
-	const gameAdded = scoreboard.addGame(game);
-	expect(gameAdded).toBe(undefined);
+	expect(() => scoreboard.addGame(game)).toThrowError("Team names can't be identical");
 });
 
 test('Finish game and remove game from scoreboard', () => {

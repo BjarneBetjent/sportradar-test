@@ -11,7 +11,7 @@
 	let homeTeam: string = '';
 	let awayTeam: string = '';
 	// Error if adding a team failed
-	let addError: boolean = false;
+	let addGameError: string = '';
 
 	// Update summary when activeGamesStore changes
 	$: if ($activeGamesStore) {
@@ -23,14 +23,15 @@
 	// Add a new game to the scoreboard.
 	// Called by the "Add to scoreboard button"
 	function addGame() {
-		const game = new Game(homeTeam, awayTeam);
-		const added = scoreboard.addGame(game);
-		if (!added) {
-			addError = true;
+		try {
+			const game = new Game(homeTeam, awayTeam);
+			scoreboard.addGame(game);
+			activeGamesStore.set(scoreboard.getGames());
+		} catch (e) {
+			if (e instanceof Error) addGameError = String(e.message);
+			else addGameError = 'Something went wrong';
 			return;
 		}
-		addError = false;
-		activeGamesStore.set(scoreboard.getGames());
 	}
 
 	function handleScoreUpdated({ detail }) {
@@ -64,9 +65,9 @@
 				</div>
 			</div>
 			<button class="border bg-slate-200" on:click={addGame}>Add to scoreboard</button>
-			{#if addError}
+			{#if addGameError}
 				<div class="">
-					<p class="text-red-600">Duplicates not allowed</p>
+					<p class="text-red-600">{addGameError}</p>
 				</div>
 			{/if}
 		</div>
