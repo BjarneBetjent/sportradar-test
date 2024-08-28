@@ -43,9 +43,14 @@
 		activeGamesStore.set(scoreboard.getGames());
 	}
 
-	function updateScore({ detail }) {
+	function handleScoreUpdated({ detail }) {
 		scoreboard.updateGameScore(detail.gameID, detail.homeScore, detail.awayScore);
 		updateSummary();
+	}
+
+	function handleGameFinished({ detail }) {
+		scoreboard.removeGame(detail.gameID);
+		activeGamesStore.set(scoreboard.getGames());
 	}
 
 	// Update the summary
@@ -55,9 +60,9 @@
 </script>
 
 <div class="w-screen h-screen flex justify-center">
-	<div class="w-7/12 flex flex-col items-center pt-20 gap-10">
+	<div class="w-96 flex flex-col items-center pt-20 gap-10">
 		<!-- Add team -->
-		<div class="w-full flex flex-col h-20 justify-center gap-2 px-20">
+		<div class="w-full flex flex-col h-20 justify-center gap-2">
 			<div class="flex gap-2">
 				<div class="flex flex-1 flex-col w-5/12">
 					<label for="hometeam"> Home Team </label>
@@ -79,7 +84,11 @@
 		<div class="flex flex-col w-full px-20 items-center gap-2">
 			<h2 class="font-bold">Scoreboard</h2>
 			{#each $activeGamesStore as game (game.getTimeStarted())}
-				<ActiveGame {game} on:scoreChanged={updateScore} />
+				<ActiveGame
+					{game}
+					on:scoreChanged={handleScoreUpdated}
+					on:gameFinished={handleGameFinished}
+				/>
 			{/each}
 		</div>
 
