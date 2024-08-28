@@ -12,6 +12,14 @@ test('Get time game started', () => {
 	expect(game.getTimeStarted()).toBe(startTime);
 });
 
+test('Get end time before and after game is finished', () => {
+	const game = new Game('RBK', 'MFK');
+	expect(game.finishGame()).toBe(undefined);
+	const finishTime = Date.now();
+	game.finishGame(finishTime);
+	expect(game.getEndTime()).toBe(finishTime);
+});
+
 test('Update score with valid numbers, and get game total score', () => {
 	const game = new Game('RBK', 'MFK');
 	game.updateGameScore(1, 0);
