@@ -19,7 +19,7 @@ export default class Team {
 	}
 
 	updateScore(newScore: number) {
-		if (newScore < 0) {
+		if (typeof newScore != 'number' || newScore < 0) {
 			throw new Error('Invalid score');
 		}
 		this.score = newScore;
