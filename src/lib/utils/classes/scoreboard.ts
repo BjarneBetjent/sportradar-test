@@ -63,7 +63,13 @@ export default class Scoreboard {
 	}
 
 	getSummary(): Game[] {
-		return this.runningGames;
+		return this.runningGames.sort((a, b) => {
+			if (a.getTotalScore() == b.getTotalScore()) {
+				return b.getTimeStarted() - a.getTimeStarted();
+			} else {
+				return b.getTotalScore() - a.getTotalScore();
+			}
+		});
 	}
 
 	/**

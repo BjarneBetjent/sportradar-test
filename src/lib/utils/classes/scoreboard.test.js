@@ -91,3 +91,46 @@ test('Update game score with invalid numbers', () => {
 		'Invalid score'
 	);
 });
+
+test('Get summary no changes to score', () => {
+	const scoreboard = new Scoreboard();
+	const fakeTimeStamp = Date.now() - 1000;
+	const game1 = new Game('RBK', 'MFK', fakeTimeStamp);
+	scoreboard.addGame(game1);
+	const game2 = new Game('BOD', 'VIK');
+	scoreboard.addGame(game2);
+
+	const summary = scoreboard.getSummary();
+	// Save score, expects most recent game to be first
+	expect(summary[0]).toStrictEqual(game2);
+});
+
+test('Get summary, change score to test ordering', () => {
+	const scoreboard = new Scoreboard();
+	const mexCan = new Game('Mexico', 'Canada', Date.now() - 100);
+	scoreboard.addGame(mexCan);
+	scoreboard.updateGameScore(mexCan.getTimeStarted(), 0, 5);
+
+	const spaBra = new Game('Spain', 'Brazil', Date.now() - 90);
+	scoreboard.addGame(spaBra);
+	scoreboard.updateGameScore(spaBra.getTimeStarted(), 10, 2);
+
+	const gerFra = new Game('Germany', 'France', Date.now() - 80);
+	scoreboard.addGame(gerFra);
+	scoreboard.updateGameScore(gerFra.getTimeStarted(), 2, 2);
+
+	const uruIta = new Game('Uruguay', 'Italy', Date.now() - 70);
+	scoreboard.addGame(uruIta);
+	scoreboard.updateGameScore(uruIta.getTimeStarted(), 6, 6);
+
+	const argAus = new Game('Argentina', 'Australia', Date.now() - 60);
+	scoreboard.addGame(argAus);
+	scoreboard.updateGameScore(argAus.getTimeStarted(), 3, 1);
+
+	const summary = scoreboard.getSummary();
+	expect(summary[0]).toStrictEqual(uruIta);
+	expect(summary[1]).toStrictEqual(spaBra);
+	expect(summary[2]).toStrictEqual(mexCan);
+	expect(summary[3]).toStrictEqual(argAus);
+	expect(summary[4]).toStrictEqual(gerFra);
+});
