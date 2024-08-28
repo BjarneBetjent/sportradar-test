@@ -6,6 +6,12 @@ test('Get total score at the start of game', () => {
 	expect(game.getTotalScore()).toBe(0);
 });
 
+test('Get time game started', () => {
+	const startTime = Date.now();
+	const game = new Game('RBK', 'MFK', startTime);
+	expect(game.getTimeStarted()).toBe(startTime);
+});
+
 test('Update score with valid numbers, and get game total score', () => {
 	const game = new Game('RBK', 'MFK');
 	game.updateGameScore(1, 0);
