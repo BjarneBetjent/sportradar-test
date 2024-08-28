@@ -20,6 +20,16 @@
 
 	const scoreboard = new Scoreboard();
 
+	// TEMP MOCK
+	const time = Date.now();
+
+	const game1 = new Game('Rosenborg', 'Molde', time - 1000);
+	const game2 = new Game('Brann', 'Lyn', time);
+	scoreboard.addGame(game1);
+	scoreboard.addGame(game2);
+
+	activeGamesStore.set(scoreboard.getGames());
+
 	// Add a new game to the scoreboard.
 	// Called by the "Add to scoreboard button"
 	function addGame() {
@@ -33,6 +43,11 @@
 		activeGamesStore.set(scoreboard.getGames());
 	}
 
+	function updateScore({ detail }) {
+		//
+		console.log('Detaisl', detail);
+	}
+
 	// Update the summary
 	function updateSummary() {
 		summaryStore.set(scoreboard.getSummary());
@@ -40,7 +55,7 @@
 </script>
 
 <div class="w-screen h-screen flex justify-center">
-	<div class="bg-slate-50 w-7/12 flex flex-col items-center pt-20 gap-10">
+	<div class="w-7/12 flex flex-col items-center pt-20 gap-10">
 		<!-- Add team -->
 		<div class="w-full flex flex-col h-20 justify-center gap-2 px-20">
 			<div class="flex gap-2">
@@ -56,19 +71,21 @@
 			<button class="border bg-slate-200" on:click={addGame}>Add to scoreboard</button>
 			{#if addError}
 				<div class="">
-					<p class="text-red-600">Failed to add this game</p>
+					<p class="text-red-600">Duplicates not allowed</p>
 				</div>
 			{/if}
 		</div>
 		<!-- Scoreboard -->
-		<div class="flex flex-col w-full px-20">
+		<div class="flex flex-col w-full px-20 items-center gap-2">
+			<h2 class="font-bold">Scoreboard</h2>
 			{#each $activeGamesStore as game (game.getTimeStarted())}
-				<ActiveGame {game} />
+				<ActiveGame {game} on:scoreChanged={updateScore} />
 			{/each}
 		</div>
 
 		<!-- Summary -->
-		<div class="flex flex-col w-full px-20">
+		<div class="flex flex-col w-full px-20 items-center gap-2">
+			<h2 class="font-bold">Summary</h2>
 			{#each $summaryStore as game (game.getTimeStarted())}
 				<SummaryGame {game} />
 			{/each}
